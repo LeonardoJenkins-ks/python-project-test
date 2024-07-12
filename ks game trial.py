@@ -1147,3 +1147,181 @@ class MuseumOfNaturalHistory:
 # Example usage
 museum = MuseumOfNaturalHistory()
 print(museum.look_around())  # "The heart of the museum with grand displays and historical exhibits."
+
+
+class NPC:
+  def __init__(self, name, description, dialogue=None):
+    self.name = name
+    self.description = description
+    self.dialogue = dialogue or {}  # Empty dictionary by default
+
+class Room:
+  def __init__(self, name, description, exits=None, npcs=None):
+    self.name = name
+    self.description = description
+    self.exits = exits or {}
+    self.npcs = npcs or []  # Empty list by default
+    self.items = []
+
+  # ... other Room methods ...
+
+class Game:
+  def __init__(self):
+    # ... other Game attributes ...
+
+  def describe_current_room(self):
+    # ... existing code ...
+
+    # Check for NPCs in the room
+    if self.current_room.npcs:
+      for npc in self.current_room.npcs:
+        print(f"\nYou also see {npc.name} in the room.")
+        print(npc.description)
+        # Optionally, greet the player using NPC dialogue
+
+  def examine(self, direction=None):
+    # ... existing code ...
+
+    # Check for NPC interaction in the current room
+    if not direction and self.current_room.npcs:
+      # Display greetings or initiate conversation based on NPC dialogue
+      print(f"{self.current_room.npcs[0].name} says: Hi there! Welcome to {self.current_room.name}.")  # Replace with appropriate dialogue
+
+# ... other Game methods ...
+
+
+class Gang:
+    def __init__(self, name, territory):
+        self.name = name
+        self.territory = territory
+
+
+class Room:
+    def __init__(self, name, description, exits=None, npcs=None, controlled_by=None):
+        self.name = name
+        self.description = description
+        self.exits = exits or {}
+        self.npcs = npcs or []
+        self.items = []
+        self.controlled_by = controlled_by  # Reference to a Gang instance or None
+
+
+# ... other parts of your game code ...
+
+# Create gang instances
+mafias = Gang("Mafia", ["Little Italy"])
+triads = Gang("Triads", ["Chinatown"])
+# ... create other gangs ...
+
+# Set gang control while creating rooms
+central_park = Room("Central Park", "A lush green oasis...", controlled_by=None)
+little_italy = Room("Little Italy", "A bustling Italian neighborhood...", controlled_by=mafias)
+
+
+# ... create other rooms and set controlled_by attribute ...
+
+# ... examine function in Game class ...
+
+def examine(self, direction=None):
+    # ... existing code ...
+
+    # Check for gang control upon entering a room
+    if self.current_room.controlled_by:
+        print(f"\nYou are now entering the territory controlled by the {self.current_room.controlled_by.name}.")
+        # Optionally, add descriptions or warnings about the area
+
+    # ... rest of the examine function ...
+
+class Item:
+    def __init__(self, name, description, effect=None):
+        self.name = name
+        self.description = description
+        self.effect = effect
+
+class Room:
+    def __init__(self, name, description):
+        self.name = name
+        self.description = description
+        self.exits = {}
+        self.items = []
+
+    def link_room(self, room, direction):
+        self.exits[direction] = room
+
+    def add_item(self, item):
+        self.items.append(item)
+
+    def __str__(self):
+        return f"Room(name={self.name}, description={self.description}, exits={list(self.exits.keys())}, items={self.items})"
+
+class Game:
+    def __init__(self):
+        self.rooms = {}
+        self.current_room = None
+
+    def add_room(self, room):
+        self.rooms[room.name] = room
+
+    def set_starting_room(self, room_name):
+        self.current_room = self.rooms[room_name]
+
+    def move(self, direction):
+        if direction in self.current_room.exits:
+            self.current_room = self.current_room.exits[direction]
+            return f"Moved to {self.current_room.name}"
+        else:
+            return "You can't go that way."
+
+    def get_current_room_description(self):
+        return self.current_room.description
+
+    def get_current_room_items(self):
+        return [item.name for item in self.current_room.items]
+
+# Create items
+items = [
+    Item(name="Eater Egg Sandwich", description="A delicious sandwich made with a perfectly cooked egg and crispy bacon."),
+    Item(name="Coney Island Hot Dog", description="A classic hot dog topped with chili, onions, and mustard."),
+    Item(name="Frozen Strawberry Daiquiri", description="A refreshing cocktail made with fresh strawberries and rum."),
+    Item(name="Alien Truffle", description="A rare and exquisite truffle from the depths of space."),
+    Item(name="Subspace Bagel", description="A bagel that can store items in a pocket dimension."),
+]
+
+# Create rooms and link them
+times_square = Room("Times Square", "A bustling commercial intersection and tourist destination.")
+central_park = Room("Central Park", "A large public park in the heart of Manhattan.")
+brooklyn_bridge = Room("Brooklyn Bridge", "A historic bridge connecting Manhattan and Brooklyn.")
+metropolitan_museum = Room("Metropolitan Museum of Art", "One of the largest and most prestigious art museums in the world.")
+statue_of_liberty = Room("Statue of Liberty", "An iconic symbol of freedom and democracy.")
+
+times_square.link_room(central_park, "north")
+central_park.link_room(times_square, "south")
+central_park.link_room(metropolitan_museum, "east")
+metropolitan_museum.link_room(central_park, "west")
+times_square.link_room(brooklyn_bridge, "east")
+brooklyn_bridge.link_room(times_square, "west")
+brooklyn_bridge.link_room(statue_of_liberty, "south")
+statue_of_liberty.link_room(brooklyn_bridge, "north")
+
+# Add items to rooms
+times_square.add_item(items[0])
+central_park.add_item(items[1])
+brooklyn_bridge.add_item(items[2])
+metropolitan_museum.add_item(items[3])
+statue_of_liberty.add_item(items[4])
+
+# Initialize game
+game = Game()
+game.add_room(times_square)
+game.add_room(central_park)
+game.add_room(brooklyn_bridge)
+game.add_room(metropolitan_museum)
+game.add_room(statue_of_liberty)
+game.set_starting_room("Times Square")
+
+# Game interaction example
+print(game.get_current_room_description())
+print(game.get_current_room_items())
+print(game.move("north"))
+print(game.get_current_room_description())
+print(game.get_current_room_items())
